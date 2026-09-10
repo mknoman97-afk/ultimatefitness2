@@ -381,7 +381,28 @@ function Why() {
 
 /* ---------------------------------- reels -------------------------------- */
 
+function fbEmbedSrc(url: string) {
+  return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
+    url,
+  )}&show_text=false&width=360&height=640&autoplay=true&mute=0`;
+}
+
 function Reels() {
+  const [active, setActive] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (active === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActive(null);
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [active]);
+
   return (
     <section id="reels" className="relative border-t border-border py-24 lg:py-36">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
@@ -407,12 +428,11 @@ function Reels() {
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {reels.map((reel, i) => (
             <Reveal key={reel.url} delay={i * 80}>
-              <a
-                href={reel.url}
-                target="_blank"
-                rel="noreferrer"
-                className="panel group relative flex aspect-[9/16] w-full overflow-hidden rounded-sm"
-                aria-label={`Watch Facebook reel: ${reel.title}`}
+              <button
+                type="button"
+                onClick={() => setActive(i)}
+                className="panel group relative flex aspect-[9/16] w-full overflow-hidden rounded-sm text-left"
+                aria-label={`Play reel: ${reel.title}`}
               >
                 <img
                   src={reel.image}
@@ -422,7 +442,7 @@ function Reels() {
                   height={711}
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+                <span className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
                 <span className="ember-pulse absolute inset-x-8 bottom-0 h-32 rounded-full bg-primary/15 blur-3xl" />
                 <span className="absolute inset-0 grid place-items-center">
                   <span className="grid h-16 w-16 place-items-center rounded-full border border-primary/50 bg-background/40 text-primary backdrop-blur transition-transform duration-500 group-hover:scale-110">
@@ -432,20 +452,55 @@ function Reels() {
                 <span className="absolute bottom-0 left-0 right-0 p-5">
                   <span className="flex items-center gap-2 text-[0.65rem] font-semibold tracking-[0.2em] text-primary uppercase">
                     <Facebook className="h-3.5 w-3.5" />
-                    Watch on Facebook
+                    Play reel
                   </span>
                   <span className="mt-2 block line-clamp-2 text-sm font-medium leading-snug text-foreground">
                     {reel.title}
                   </span>
                 </span>
-              </a>
+              </button>
             </Reveal>
           ))}
         </div>
       </div>
+
+      {active !== null && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 p-4 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setActive(null)}
+        >
+          <button
+            type="button"
+            onClick={() => setActive(null)}
+            aria-label="Close video"
+            className="absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full border border-border bg-card text-foreground transition-colors hover:text-primary"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <div
+            className="relative aspect-[9/16] w-full max-w-[min(420px,calc(100vh-8rem)*0.5625)] overflow-hidden rounded-sm border border-border bg-black"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <iframe
+              key={reels[active]!.url}
+              src={fbEmbedSrc(reels[active]!.url)}
+              title={reels[active]!.title}
+              className="absolute inset-0 h-full w-full"
+              style={{ border: "none", overflow: "hidden" }}
+              scrolling="no"
+              frameBorder="0"
+              allowFullScreen
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
+
 
 /* ------------------------------ testimonials ----------------------------- */
 
