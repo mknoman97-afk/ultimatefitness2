@@ -18,7 +18,7 @@ import heroImg from "@/assets/hero-gym.jpg";
 import facilityImg from "@/assets/facility.jpg";
 import tanningImg from "@/assets/tanning.jpg";
 import { Reveal } from "@/components/site/Reveal";
-import { business, nav, stats, training } from "@/components/site/data";
+import { business, nav, reels, stats, training } from "@/components/site/data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
