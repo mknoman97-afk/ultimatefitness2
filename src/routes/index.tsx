@@ -484,9 +484,9 @@ function Reels() {
             onClick={(e) => e.stopPropagation()}
           >
             <iframe
-              key={reels[active].url}
-              src={fbEmbedSrc(reels[active].url)}
-              title={reels[active].title}
+              key={reels[active]!.url}
+              src={fbEmbedSrc(reels[active]!.url)}
+              title={reels[active]!.title}
               className="absolute inset-0 h-full w-full"
               style={{ border: "none", overflow: "hidden" }}
               scrolling="no"
