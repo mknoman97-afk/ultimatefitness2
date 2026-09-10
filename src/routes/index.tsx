@@ -405,21 +405,40 @@ function Reels() {
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {[1, 2, 3, 4].map((n, i) => (
-            <Reveal key={n} delay={i * 80}>
-              <div
-                data-reel-slot={n}
-                className="panel group relative flex aspect-[9/16] w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-sm"
+          {reels.map((reel, i) => (
+            <Reveal key={reel.url} delay={i * 80}>
+              <a
+                href={reel.url}
+                target="_blank"
+                rel="noreferrer"
+                className="panel group relative flex aspect-[9/16] w-full overflow-hidden rounded-sm"
+                aria-label={`Watch Facebook reel: ${reel.title}`}
               >
-                <div className="grid-lines absolute inset-0 opacity-30" />
+                <img
+                  src={reel.image}
+                  alt={reel.alt}
+                  loading="lazy"
+                  width={400}
+                  height={711}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
                 <span className="ember-pulse absolute inset-x-8 bottom-0 h-32 rounded-full bg-primary/15 blur-3xl" />
-                <span className="relative grid h-16 w-16 place-items-center rounded-full border border-primary/50 text-primary transition-transform duration-500 group-hover:scale-110">
-                  <Play className="h-6 w-6" />
+                <span className="absolute inset-0 grid place-items-center">
+                  <span className="grid h-16 w-16 place-items-center rounded-full border border-primary/50 bg-background/40 text-primary backdrop-blur transition-transform duration-500 group-hover:scale-110">
+                    <Play className="h-6 w-6" />
+                  </span>
                 </span>
-                <p className="relative text-[0.65rem] font-semibold tracking-[0.28em] text-muted-foreground uppercase">
-                  Reel {n} · Coming soon
-                </p>
-              </div>
+                <span className="absolute bottom-0 left-0 right-0 p-5">
+                  <span className="flex items-center gap-2 text-[0.65rem] font-semibold tracking-[0.2em] text-primary uppercase">
+                    <Facebook className="h-3.5 w-3.5" />
+                    Watch on Facebook
+                  </span>
+                  <span className="mt-2 block line-clamp-2 text-sm font-medium leading-snug text-foreground">
+                    {reel.title}
+                  </span>
+                </span>
+              </a>
             </Reveal>
           ))}
         </div>
